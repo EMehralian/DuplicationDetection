@@ -3,13 +3,12 @@ import numpy as np
 import nltk
 import re
 from nltk.stem import PorterStemmer
-
+from tqdm import tqdm
 
 train = pd.read_csv('Data/train.csv').fillna(" ")
 print("data has been loaded")
+print(train.shape)
 
-# train = train.drop(105780)
-# train = train.drop(201841)
 train = train.dropna()
 print("dropped")
 
@@ -32,6 +31,7 @@ tokenizer = nltk.RegexpTokenizer(r'\w+')
 # 3. not remove stopwords
 # 4. change to everything lower case
 # swords = stopwords.words('english')
+
 
 def text_to_wordlist(text):
     # Clean the text, with the option to remove stop_words and to stem words.
@@ -95,7 +95,7 @@ def text_to_wordlist(text):
 
     tokenized = tokenizer.tokenize(text)
     wordsList = [word.lower() for word in tokenized]
-    # stemList = [ps.stem(w) for w in wordsList]
+
     if len(wordsList) < 5:
         return None
     return " ".join(wordsList)
@@ -105,8 +105,8 @@ def text_to_wordlist(text):
 tockenized1 = []
 tockenized2 = []
 # deploy pre-process in the train data and store result(words of every sentence) in the dataframe
-for index, row in x_train.iterrows():
-    print(index)
+for index, row in tqdm(x_train.iterrows()):
+    # print(index)
     temp1 = text_to_wordlist(row["question1"])
     temp2 = text_to_wordlist(row["question2"])
     tockenized1.append(temp1)
